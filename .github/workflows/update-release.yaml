@@ -1,0 +1,43 @@
+name: Update JSON version file
+on:
+  repository_dispatch:
+    types: [update-release]
+jobs:
+  update-json:
+    name: Update JSON file
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update JSON
+        env:
+          TAG: ${{ github.event.client_payload.tag }}
+          DESCRIPTION: ${{ github.event.client_payload.desc }}
+        run: |
+          echo "TAG=$TAG" >> $GITHUB_ENV
+
+          echo '{
+            "version": "<version>",
+            "title": "Multipass <version> release",
+            "description": "<description>",
+            "download_url": "https://multipass.run/#install",
+            "release_url": "https://github.com/canonical/multipass/releases/tag/v<version>",
+            "installer_urls": {
+              "windows": "https://github.com/canonical/multipass/releases/download/v<version>/multipass-<version>+win-win64.exe",
+              "macos": "https://github.com/canonical/multipass/releases/download/v<version>/multipass-<version>+mac-Darwin.pkg"
+            }
+          }' | sed "s/<version>/${TAG}/g" | sed "s/<description>/${DESCRIPTION}/g" > $GITHUB_WORKSPACE/static/latest-release.json
+          
+      - name: Create PR
+        id: create-pr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: Update latest release JSON file to ${{ env.TAG }}
+          title: Update latest release JSON file to ${{ env.TAG }}
+          body:
+
+      - name: Merge PR
+        uses: juliangruber/merge-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.MY_TOKEN }}
+          number: ${{ steps.create-pr.outputs.pull-request-number }}
