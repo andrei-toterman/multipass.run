@@ -1,0 +1,29 @@
+name: Update JSON version file
+on:
+  repository_dispatch:
+    types: [update-release]
+jobs:
+  update-json:
+    name: Update JSON file
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update JSON
+        env:
+          RELEASE: ${{ github.event.client_payload.ref }}
+          DESCRIPTION: ${{ github.event.client_payload.desc }}
+        run: |
+          echo '{
+            "version": "<version>",
+            "title": "Multipass <version> release",
+            "description": "<description>",
+            "download_url": "https://multipass.run/#install",
+            "release_url": "https://github.com/canonical/multipass/releases/tag/v<version>",
+            "installer_urls": {
+              "windows": "https://github.com/canonical/multipass/releases/download/v<version>/multipass-<version>+win-win64.exe",
+              "macos": "https://github.com/canonical/multipass/releases/download/v<version>/multipass-<version>+mac-Darwin.pkg"
+            }
+          }' | sed "s/<version>/${RELEASE#refs/tags/}/g" | sed "s/<description>/${DESCRIPTION}/g" > $GITHUB_WORKSPACE/static/latest-release.json
+          
+      - name: Create PR
+        uses: peter-evans/create-pull-request@v7
