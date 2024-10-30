@@ -1,11 +1,11 @@
 {
-  "version": "1.2",
-  "title": "Multipass 1.2 release",
-  "description": "AAAAAAAAAAAAAAAa",
+  "version": "1.15",
+  "title": "Multipass 1.15 release",
+  "description": "Did awesome stuff",
   "download_url": "https://multipass.run/#install",
-  "release_url": "https://github.com/canonical/multipass/releases/tag/v1.2",
+  "release_url": "https://github.com/canonical/multipass/releases/tag/v1.15",
   "installer_urls": {
-    "windows": "https://github.com/canonical/multipass/releases/download/v1.2/multipass-1.2+win-win64.exe",
-    "macos": "https://github.com/canonical/multipass/releases/download/v1.2/multipass-1.2+mac-Darwin.pkg"
+    "windows": "https://github.com/canonical/multipass/releases/download/v1.15/multipass-1.15+win-win64.exe",
+    "macos": "https://github.com/canonical/multipass/releases/download/v1.15/multipass-1.15+mac-Darwin.pkg"
   }
 }
