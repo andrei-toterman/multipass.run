@@ -1,37 +1,37 @@
-name: docs links on multipass.run/docs
+# name: docs links on multipass.run/docs
 
-on:
-  schedule:
-    - cron: "0 13 * * *"
+# on:
+#   schedule:
+#     - cron: "0 13 * * *"
 
-jobs:
-  check-links:
-    runs-on: ubuntu-latest
+# jobs:
+#   check-links:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout main
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout main
+#         uses: actions/checkout@v3
 
-      - name: Install linkchecker
-        run: sudo pip install LinkChecker
+#       - name: Install linkchecker
+#         run: sudo pip install LinkChecker
 
-      - name: Write linkchecker config file
-        run: |
-          mkdir -p ~/.linkchecker
-          cp scripts/linkcheckerrc ~/.linkchecker/
+#       - name: Write linkchecker config file
+#         run: |
+#           mkdir -p ~/.linkchecker
+#           cp scripts/linkcheckerrc ~/.linkchecker/
 
-      - name: Run linkchecker
-        continue-on-error: true
-        run: linkchecker https://multipass.run/docs > ~/.linkchecker/linkchecker-out.txt
+#       - name: Run linkchecker
+#         continue-on-error: true
+#         run: linkchecker https://multipass.run/docs > ~/.linkchecker/linkchecker-out.txt
 
-      - name: Parse linkchecker output
-        run: scripts/parseDocsLinkcheckerOutput
+#       - name: Parse linkchecker output
+#         run: scripts/parseDocsLinkcheckerOutput
 
-      - name: Send message on failure
-        if: failure()
-        run: |
-          curl -X POST \
-          -F "workflow=${GITHUB_WORKFLOW}" \
-          -F "repo_name=${GITHUB_REPOSITORY}" \
-          -F "action_id=${GITHUB_RUN_ID}" \
-          ${{ secrets.BOT_URL }}?room=docs
+#       - name: Send message on failure
+#         if: failure()
+#         run: |
+#           curl -X POST \
+#           -F "workflow=${GITHUB_WORKFLOW}" \
+#           -F "repo_name=${GITHUB_REPOSITORY}" \
+#           -F "action_id=${GITHUB_RUN_ID}" \
+#           ${{ secrets.BOT_URL }}?room=docs
